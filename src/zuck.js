@@ -301,7 +301,7 @@ module.exports = (window => {
                   <span class="time">${get(itemData, 'lastUpdatedAgo')}</span>
                 </span>
               </a>
-              
+
               <ul class="items"></ul>
             </div>`;
         },
@@ -367,7 +367,7 @@ module.exports = (window => {
         },
 
         viewerItemPointer (index, currentIndex, item) {
-          return `<span 
+          return `<span
                     class="${currentIndex === index ? 'active' : ''} ${get(item, 'seen') === true ? 'seen' : ''}"
                     data-index="${index}" data-item-id="${get(item, 'id')}">
                       <b style="animation-duration:${get(item, 'length') === '' ? '3' : get(item, 'length')}s"></b>
@@ -375,7 +375,7 @@ module.exports = (window => {
         },
 
         viewerItemBody (index, currentIndex, item) {
-          return `<div 
+          return `<div
                     class="item ${get(item, 'seen') === true ? 'seen' : ''} ${currentIndex === index ? 'active' : ''}"
                     data-time="${get(item, 'time')}" data-type="${get(item, 'type')}" data-index="${index}" data-item-id="${get(item, 'id')}">
                     ${
@@ -848,9 +848,9 @@ module.exports = (window => {
               };
 
               const storyViewerViewing = query('#zuck-modal .viewing');
-
               if (storyViewerViewing && video) {
-                if (storyViewerViewing.classList.contains('muted')) {
+                // only unmute if we are tapping the 'unmute' button
+                if (event && event.originalTarget && event.originalTarget.classList && event.originalTarget.classList.contains('muted') && event.originalTarget.classList.contains('tip') && storyViewerViewing.classList.contains('muted')) {
                   unmuteVideoItem(video, storyViewerViewing);
                 } else {
                   navigateItem();
