@@ -8,6 +8,12 @@ module.exports = (window => {
   const query = function (qs) {
     return document.querySelectorAll(qs)[0];
   };
+  const removeElementsByClass = function (className){
+    const elements = document.getElementsByClassName(className);
+    while(elements.length > 0){
+      elements[0].parentNode.removeChild(elements[0]);
+    }
+  }
 
   const get = function (array, what) {
     if (array) {
@@ -381,7 +387,7 @@ module.exports = (window => {
                     ${
                       get(item, 'type') === 'video'
                       ? `<video class="media" muted webkit-playsinline playsinline preload="auto" src="${get(item, 'src')}" ${get(item, 'type')}></video>
-                        <b class="tip muted">${option('language', 'unmute')}</b>`
+                        <b id="mutePrompt" class="tip muted">${option('language', 'unmute')}</b>`
                       : `<img loading="auto" class="media" src="${get(item, 'src')}" ${get(item, 'type')} />
                     `}
 
@@ -848,6 +854,7 @@ module.exports = (window => {
               };
 
               const storyViewerViewing = query('#zuck-modal .viewing');
+              console.log("SVV", event, storyViewerViewing);
               if (storyViewerViewing && video) {
                 // only unmute if we are tapping the 'unmute' button
                 if (event && event.originalTarget && event.originalTarget.classList && event.originalTarget.classList.contains('muted') && event.originalTarget.classList.contains('tip') && storyViewerViewing.classList.contains('muted')) {
@@ -1175,10 +1182,7 @@ module.exports = (window => {
         zuck.internalData.currentVideoElement = video;
 
         video.play();
-
-        if (unmute && unmute.target) {
-          unmuteVideoItem(video, storyViewer);
-        }
+        
       } else {
         zuck.internalData.currentVideoElement = false;
       }
@@ -1194,12 +1198,15 @@ module.exports = (window => {
     };
 
     const unmuteVideoItem = function (video, storyViewer) {
+      console.log("UnmuteVideoItem", video, storyViewer);
       video.muted = false;
       video.volume = 1.0;
       video.removeAttribute('muted');
+      removeElementsByClass('tip muted');
       video.play();
 
       if (video.paused) {
+        console.log("Video paused, replaying")
         video.muted = true;
         video.play();
       }
@@ -1335,6 +1342,10 @@ module.exports = (window => {
     };
 
     zuck.navigateItem = zuck.nextItem = (direction, event) => {
+      // ignore navigateItem() if the tap is on the mute button
+      if (event && event.originalTarget && event.originalTarget.classList && event.originalTarget.classList.contains('muted') && event.originalTarget.classList.contains('tip')) {
+        return false;
+      }
       const currentStory = zuck.internalData.currentStory;
       const currentItem = zuck.data[currentStory].currentItem;
       const storyViewer = query(`#zuck-modal .story-viewer[data-story-id="${currentStory}"]`);
