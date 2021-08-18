@@ -857,7 +857,7 @@ module.exports = (window => {
               
               if (storyViewerViewing && video) {
                 // only unmute if we are tapping the 'unmute' button
-                if (event && event.target && event.target.classList && event.target.classList.contains('muted') && event.target.classList.contains('tip') && storyViewerViewing.classList.contains('muted')) {
+                if (event && event.target && event.target.classList && event.target.classList.contains('muted') && event.target.classList.contains('tip')) {
                   unmuteVideoItem(video, storyViewerViewing);
                 } else {
                   navigateItem();
