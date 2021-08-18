@@ -387,7 +387,7 @@ module.exports = (window => {
                     ${
                       get(item, 'type') === 'video'
                       ? `<video class="media" muted webkit-playsinline playsinline preload="auto" src="${get(item, 'src')}" ${get(item, 'type')}></video>
-                        <b id="mutePrompt" class="tip muted">${option('language', 'unmute')}</b>`
+                        <b class="tip muted">${option('language', 'unmute')}</b>`
                       : `<img loading="auto" class="media" src="${get(item, 'src')}" ${get(item, 'type')} />
                     `}
 
@@ -854,10 +854,10 @@ module.exports = (window => {
               };
 
               const storyViewerViewing = query('#zuck-modal .viewing');
-              console.log("SVV", event, storyViewerViewing);
+              
               if (storyViewerViewing && video) {
                 // only unmute if we are tapping the 'unmute' button
-                if (event && event.originalTarget && event.originalTarget.classList && event.originalTarget.classList.contains('muted') && event.originalTarget.classList.contains('tip') && storyViewerViewing.classList.contains('muted')) {
+                if (event && event.target && event.target.classList && event.target.classList.contains('muted') && event.target.classList.contains('tip') && storyViewerViewing.classList.contains('muted')) {
                   unmuteVideoItem(video, storyViewerViewing);
                 } else {
                   navigateItem();
@@ -1198,11 +1198,14 @@ module.exports = (window => {
     };
 
     const unmuteVideoItem = function (video, storyViewer) {
-      console.log("UnmuteVideoItem", video, storyViewer);
+      
       video.muted = false;
       video.volume = 1.0;
       video.removeAttribute('muted');
-      removeElementsByClass('tip muted');
+      if(document.querySelector('.item.active') && document.querySelector('.item.active').querySelector('.tip.muted')){
+        document.querySelector('.item.active').querySelector('.tip.muted').remove()
+      }
+
       video.play();
 
       if (video.paused) {
@@ -1342,8 +1345,10 @@ module.exports = (window => {
     };
 
     zuck.navigateItem = zuck.nextItem = (direction, event) => {
+      
       // ignore navigateItem() if the tap is on the mute button
-      if (event && event.originalTarget && event.originalTarget.classList && event.originalTarget.classList.contains('muted') && event.originalTarget.classList.contains('tip')) {
+      if (event && event.target && event.target.classList && event.target.classList.contains('muted') && event.target.classList.contains('tip')) {
+        console.log("Clicked on mute button, not navigating");
         return false;
       }
       const currentStory = zuck.internalData.currentStory;
