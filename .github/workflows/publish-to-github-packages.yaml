@@ -1,0 +1,32 @@
+name: "Publish Release Package"
+on:
+  push:
+    branches:
+      - master
+      - release/*
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: write # to be able to publish a GitHub release
+      issues: write # to be able to comment on released issues
+      pull-requests: write # to be able to comment on released pull requests
+      id-token: write # to enable use of OIDC for npm provenance
+    steps:
+      - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
+      - uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b # v4
+        with:
+          node-version-file: ".nvmrc"
+          cache: npm
+      - name: Install deps
+        run: npm ci --legacy-peer-deps
+      - name: Build
+        run: npm run build:prod
+      - name: Release
+        env:
+          NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }} #  may need a custom token
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }} # may need a custom token
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }} # may need a custom token
+        run: npx semantic-release

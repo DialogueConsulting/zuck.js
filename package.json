@@ -1,10 +1,15 @@
 {
-  "name": "zuck.js",
+  "name": "@dialogueconsulting/zuck.js",
   "version": "1.6.4",
   "description": "A javascript library that lets you add stories EVERYWHERE.",
   "homepage": "https://ramon.codes/projects/zuck.js",
-  "author": "Ramon Souza <me@ramon.codes> (https://ramon.codes)",
-  "main": "./src/zuck.js",
+  "main": "./dist/zuck.min.js",
+  "style": "dist/zuck.min.css",
+  "files": [
+    "dist",
+    "package.json",
+    "README.md"
+  ],
   "keywords": [
     "stories",
     "story",
@@ -22,7 +27,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/ramon82/zuck.js.git"
+    "url": "https://github.com/DialogueConsulting/zuck.js.git"
   },
   "bugs": {
     "url": "https://github.com/ramon82/zuck.js/issues"
@@ -70,6 +75,16 @@
       "semistandard"
     ]
   },
+  "release": {
+    "branches": [
+      "master",
+      {
+        "name": "release/*",
+        "prerelease": "rc",
+        "channel": "next"
+      }
+    ]
+  },
   "babel": {
     "presets": [
       [
@@ -90,6 +105,8 @@
   "scripts": {
     "build:prod": "NODE_ENV=production webpack --mode production",
     "build:dev": "NODE_ENV=development webpack --mode development",
-    "watch": "webpack-dev-server --config=./webpack.config.js --mode production"
+    "watch": "webpack-dev-server --config=./webpack.config.js --mode production",
+    "release": "npx semantic-release",
+    "semantic-release": "semantic-release"
   }
 }
