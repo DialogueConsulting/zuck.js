@@ -1,4 +1,4 @@
-# zuck.js
+# Sked zuck.js
 
 [![Zuck.JS demo](https://raw.githubusercontent.com/ramon82/assets/master/zuck.js/preview.gif)](https://on.ramon82.com/2k9e7au)
 
